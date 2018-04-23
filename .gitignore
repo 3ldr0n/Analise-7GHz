@@ -99,3 +99,18 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# Files and folders to ignore
+dados_7ghz
+Savef
+Eventos
+RSTN
+Componente S
+*.pdf
+hekar
+noaaftp
+test.py
+*.k7o
+*.K7O
+*.list
+*.LIS
