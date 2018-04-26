@@ -109,8 +109,10 @@ Componente S
 *.pdf
 hekar
 noaaftp
-test.py
+hek_test.py
 *.k7o
 *.K7O
 *.list
 *.LIS
+*.phf
+*.PHF
