@@ -22,12 +22,15 @@ class Utils(object):
         df (DataFrame): aa.
         diretorio (str): aa.
     """
+
+    # posiçáo começa vazio e vai acrescentando o clique conforme o 
+    # gráfico e clicado.
     posicao = []
 
     def __init__(self, filename):
         self.filename = filename
         # Caminho para todos os arquivos salvos.
-        self.CAMINHO_ABSOLUTO = str(os.getcwd()) + "\Analise 7 GHz\\"
+        self.CAMINHO_ABSOLUTO = os.path.dirname(os.path.abspath(__file__)) + "\dados_7 GHz\\"
 
 
     @property
@@ -46,13 +49,11 @@ class Utils(object):
 
 
     @property
-    def get_diretorio(self):
     def get_time(self):
         return self.time
 
 
     @property
-    def get_diretorio(self):
     def get_caminho_absoluto(self):
         return self.CAMINHO_ABSOLUTO
 
@@ -61,6 +62,8 @@ class Utils(object):
         # TODO
         # Documentar essa função.
         n = self.df.iloc[np.argmin(np.abs(self.df.index.to_pydatetime() - ponto_escolhido))]
+        # Retorna o tempo no formato datetime.
+        # O tempo e usado como posicao, pois se trata do eixo x.
         n1 = np.argmin(np.abs(self.df.index.to_pydatetime() - ponto_escolhido))
         return n, n1
 
@@ -127,11 +130,14 @@ class Utils(object):
         self.diretorio = diretorio
 
 
-    def calculo_da_media(self, final=False):
+    def calculo_da_media(self, rstn=False):
         """
-        Essa função calcula a media entre dois pontos selecionados,
-        tanto no R quanto no L. E calcula o tamanho do gráfico para se
-        plotar as médias.
+        Faz um calculo da media de todos os itens dentro de um dataframe, criando
+        uma coluna com os dados ja com a media, chamada "nome_da_coluna_original"
+        mais "_nomalizado", ja que usamos essa funcao para normalizar os graficos.
+        Exemplo de uso:
+            Calcular a media de um grafico a partir de dois pontos selecionados de
+            um grafico.
         """
         # Ponto antes e depois do evento, e dois pontos antes para a média.(LFA)
 
@@ -147,28 +153,44 @@ class Utils(object):
         indice_de_y2 = calculo_de_indice(self.df, tempo2)
 
         # Calcula os indices dos gráficos 1 e 2.
-        indice_ig1, tempo1_flare = calculo_de_indice(self.df, posicao_grafico1)
-        indice_ig2, tempo2_flare = calculo_de_indice(self.df, posicao_grafico2)
+        indice_grafico1, tempo1_flare = calculo_de_indice(self.df, posicao_grafico1)
+        indice_grafico2, tempo2_flare = calculo_de_indice(self.df, posicao_grafico2)
 
-        # Pega todos os pontos entre os pontos selecionados em t1 e t2.
-        media_r = np.array(self.df["R"][indice_de_y2[1]:indice_de_y1[1]])
-        media_l = np.array(self.df["L"][indice_de_y2[1]:indice_de_y1[1]])
+        # Inicializa um dicionario que vai guardar os dados, normais e normalizados.
+        todas_medias = {'L': 0, 'R': 0}
+        # Esse for passa por cada coluna do dataframe e calcula a media de seus
+        # respectivos dados.
+        for column in df.columns:
+            # Pega todos os pontos entre os pontos selecionados em t1 e t2.
+            media = np.array(df[column][indice_de_y2[1]:indice_de_y1[1]])
 
-        # Médias calculadas.
-        media_final_r = np.median(media_r)
-        media_final_l = np.median(media_l)
+            # Medias calculadas.
+            media_final = np.median(media)
 
-        if final:
             # Se for a ultima vez chamando essa função, será criado duas colunas
             # no dataframe. As quais vão ser todos os valores menos as medias R e L,
             # criando assim R e L normalizados.
-            self.df["R_normalizado"] = self.df["R"] - media_final_r
-            self.df["L_normalizado"] = self.df["L"] - media_final_l
 
-            return indice_ig1, indice_ig2, media_final_r, media_final_l, tempo1_flare, tempo2_flare
+            coluna = column + "_normalizado"
+            df[coluna] = df[column] - media_final
+            todas_medias[column] = media_final
 
-        else:
-            return indice_ig1, indice_ig2, media_final_r, media_final_l, tempo1_flare, tempo2_flare
+            # Pega todos os pontos entre os pontos selecionados em t1 e t2.
+            media_r = np.array(self.df["R"][indice_de_y2[1]:indice_de_y1[1]])
+            media_l = np.array(self.df["L"][indice_de_y2[1]:indice_de_y1[1]])
+
+            # Médias calculadas.
+            media_final_r = np.median(media_r)
+            media_final_l = np.median(media_l)
+
+        if rstn is True:
+            return todas_medias
+
+        dados_finais = [
+            indice_grafico1, indice_grafico2, todas_medias,
+            tempo1_flare, tempo2_flare
+        ]
+        return dados_finais
 
 
     def ponto_mais_proximo(self, lista, numero):

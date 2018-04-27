@@ -14,7 +14,7 @@ CAMINHO_ABSOLUTO = os.path.dirname(os.path.abspath(__file__)) + "\dados_7GHz\\"
 
 def calculo_de_indice(df, ponto_escolhido):
     # TODO
-    # Documentar essa funcao.
+    # Documentar essa função.
     n = df.iloc[np.argmin(np.abs(df.index.to_pydatetime() - ponto_escolhido))]
     # Retorna o tempo no formato datetime.
     # O tempo e usado como posicao, pois se trata do eixo x.
@@ -24,7 +24,7 @@ def calculo_de_indice(df, ponto_escolhido):
 # posicao comeca vazio e vai acrescentando o clique conforme o grafico e clicado.
 posicao = []
 def onclick(event):
-    # Anexa os dados do clique na list posicao.
+    # Anexa os dados do clique na list posição.
     posicao.append([event.xdata,event.ydata])
     # Imprime uma linha no local clicado.
     plt.plot([posicao[-1][0],posicao[-1][0]],[-20,700])
@@ -35,7 +35,7 @@ def dia_mes_ano_filename(filename, load_dados=True):
     mes = int(filename[0:2])
     dia = int(filename[2:4])
 
-    # Coloca a data em um dicion�rio.
+    # Coloca a data em um dicionário.
     data = {
         'ano': ano,
         'mes': mes,
@@ -57,7 +57,7 @@ def load_dados(ano, filename):
     # o nome nesse formato.
     diretorio = str(dt.date(data['ano'], data['mes'], data['dia']))
 
-    # Confere se o diretorio ja existe.
+    # Confere se o diretório já existe.
     if os.path.exists(CAMINHO_ABSOLUTO + diretorio):
         print("O diretorio ja existe")
     else:
@@ -76,7 +76,6 @@ def load_dados(ano, filename):
         dados.fl.clip(-1000, 1000)])
 
     df = pd.DataFrame(transposed_data, index=time, columns=['R','L'])
-    #df = df / 2
 
     return df, time, diretorio
 
@@ -96,14 +95,14 @@ def calculo_da_media(df, rstn=False):
     posicao_grafico1 = num2date(posicao[-4][0])
     posicao_grafico2 = num2date(posicao[-3][0])
 
-    # Usados para calcular a m�dia entre os pontos selecionados.
+    # Usados para calcular a média entre os pontos selecionados.
     tempo1 = num2date(posicao[-1][0])
     tempo2 = num2date(posicao[-2][0])
 
     indice_de_y1 = calculo_de_indice(df, tempo1)
     indice_de_y2 = calculo_de_indice(df, tempo2)
 
-    # Calcula os indices dos gr�ficos 1 e 2.
+    # Calcula os indices dos gráficos 1 e 2.
     indice_grafico1, tempo1_flare = calculo_de_indice(df, posicao_grafico1)
     indice_grafico2, tempo2_flare = calculo_de_indice(df, posicao_grafico2)
 
@@ -118,8 +117,8 @@ def calculo_da_media(df, rstn=False):
         # Medias calculadas.
         media_final = np.median(media)
 
-        # Se for a ultima vez chamando essa fun��o, ser� criado duas colunas
-        # no dataframe. As quais v�o ser todos os valores menos as medias R e L,
+        # Se for a ultima vez chamando essa função, será criado duas colunas
+        # no dataframe. As quais vão ser todos os valores menos as medias R e L,
         # criando assim R e L normalizados.
 
         coluna = column + "_normalizado"
@@ -137,7 +136,7 @@ def calculo_da_media(df, rstn=False):
 
 def ponto_mais_proximo(lista, numero):
     """
-    Essa funcao pega o n�mero mais pr�ximo, de um certo n�mero dentro
+    Essa funcao pega o número mais próximo, de um certo número dentro
     de uma lista.
     """
     return min(lista, key=lambda n: abs(n - (numero)))
