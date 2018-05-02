@@ -118,3 +118,5 @@ hek_test.py
 *relatorio*
 *.phf
 *.PHF
+*~
+*.swp
