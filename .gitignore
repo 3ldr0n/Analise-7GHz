@@ -102,6 +102,7 @@ ENV/
 
 # Files and folders to ignore
 dados_7ghz
+dados_7GHz
 Savef
 Eventos
 RSTN

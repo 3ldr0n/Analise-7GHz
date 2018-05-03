@@ -2,6 +2,8 @@
 
 import os
 import datetime as dt
+import platform
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -10,7 +12,13 @@ from matplotlib.dates import num2date
 from scipy.io import readsav
 
 # Caminho para todos os arquivos salvos.
-CAMINHO_ABSOLUTO = os.path.dirname(os.path.abspath(__file__)) + "\dados_7GHz\\"
+if platform.system() == "Linux":
+    CAMINHO_ABSOLUTO = os.path.dirname(
+        os.path.abspath(__file__)) + "/dados_7GHz/"
+else:
+    CAMINHO_ABSOLUTO = os.path.dirname(
+        os.path.abspath(__file__)) + "\dados_7GHz\\"
+
 
 def calculo_de_indice(df, ponto_escolhido):
     # TODO
@@ -21,13 +29,18 @@ def calculo_de_indice(df, ponto_escolhido):
     n1 = np.argmin(np.abs(df.index.to_pydatetime() - ponto_escolhido))
     return n, n1
 
-# posicao comeca vazio e vai acrescentando o clique conforme o grafico e clicado.
+
+# posicao comeca vazio e vai acrescentando
+# o clique conforme o grafico e clicado.
 posicao = []
+
+
 def onclick(event):
     # Anexa os dados do clique na list posição.
-    posicao.append([event.xdata,event.ydata])
+    posicao.append([event.xdata, event.ydata])
     # Imprime uma linha no local clicado.
-    plt.plot([posicao[-1][0],posicao[-1][0]],[-20,700])
+    plt.plot([posicao[-1][0], posicao[-1][0]], [-20, 700])
+
 
 def dia_mes_ano_filename(filename, load_dados=True):
     # Adiciona 20 no inicio do ano, ja que o ano esta no formato AA.
@@ -79,11 +92,14 @@ def arquivo_existe(caminho, mes):
             return True
 
     return False
-    
+
 
 def caminho_rstn(ano, mes, dia):
 
-    caminho = "dados_rstn\\" + str(ano) + "\\0" + str(mes) + "\\"
+    if platform.system() == "Linux":
+        caminho = "dados_rstn/" + str(ano) + "/0" + str(mes) + "/"
+    else:
+        caminho = "dados_rstn\\" + str(ano) + "\\0" + str(mes) + "\\"
     # upper.
     if dia < 10:
         dia = "0" + str(dia)
@@ -100,14 +116,19 @@ def caminho_rstn(ano, mes, dia):
         arquivo = dia + mes_upper(mes) + str(ano)[2:] + ".K7O"
         print(arquivo)
         return caminho + arquivo
-    
+
 
 def load_dados(ano, filename):
-    path = os.path.dirname(os.path.abspath(__file__)) + "\Savef\\" + str(ano) + "\\"
+    if platform.system() == "Linux":
+        path = os.path.dirname(os.path.abspath(__file__)) + \
+            "/Savef/" + str(ano) + "/"
+    else:
+        path = os.path.dirname(os.path.abspath(__file__)) + \
+            "\Savef\\" + str(ano) + "\\"
     dados = readsav(path + filename)
 
     data = dia_mes_ano_filename(filename)
-    rstn = caminho_rstn(data['ano'], data['mes'], data['dia'])
+    # rstn = caminho_rstn(data['ano'], data['mes'], data['dia'])
 
     # O nome do diretorio segue o formato aaaa-mm-dd. Essa linha cria
     # o nome nesse formato.
@@ -115,14 +136,15 @@ def load_dados(ano, filename):
 
     # Confere se o diretório já existe.
     if os.path.exists(CAMINHO_ABSOLUTO + diretorio):
-        print("O diretorio ja existe")
+        print("O diretorio já existe")
     else:
         # Cria o diretorio.
         os.mkdir(CAMINHO_ABSOLUTO + diretorio)
 
     # dt.date(ano, dia, mes) Formata a data no formato aaaa-dd-mm.
     # .toordinal formata no formato gregoriano.
-    data_gregoriano = dt.date(data['ano'], data['mes'], data['dia']).toordinal()
+    data_gregoriano = dt.date(
+        data['ano'], data['mes'], data['dia']).toordinal()
 
     time = num2date(data_gregoriano + dados.time/3600./24.)
 
@@ -131,9 +153,10 @@ def load_dados(ano, filename):
         dados.fr.clip(-1000, 1000),
         dados.fl.clip(-1000, 1000)])
 
-    df = pd.DataFrame(transposed_data, index=time, columns=['R','L'])
+    df = pd.DataFrame(transposed_data, index=time, columns=['R', 'L'])
 
-    return df, time, diretorio, rstn
+    return df, time, diretorio, data
+
 
 def calculo_da_media(df, rstn=False):
     """
@@ -162,7 +185,8 @@ def calculo_da_media(df, rstn=False):
     indice_grafico1, tempo1_flare = calculo_de_indice(df, posicao_grafico1)
     indice_grafico2, tempo2_flare = calculo_de_indice(df, posicao_grafico2)
 
-    # Inicializa um dicionario que vai guardar os dados, normais e normalizados.
+    # Inicializa um dicionario que vai guardar os dados,
+    # normais e normalizados.
     todas_medias = {'L': 0, 'R': 0}
     # Esse for passa por cada coluna do dataframe e calcula a media de seus
     # respectivos dados.
@@ -189,6 +213,7 @@ def calculo_da_media(df, rstn=False):
         tempo1_flare, tempo2_flare
     ]
     return dados_finais
+
 
 def ponto_mais_proximo(lista, numero):
     """
