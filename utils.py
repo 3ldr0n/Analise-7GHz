@@ -17,7 +17,7 @@ if platform.system() == "Linux":
         os.path.abspath(__file__)) + "/dados_7GHz/"
 else:
     CAMINHO_ABSOLUTO = os.path.dirname(
-        os.path.abspath(__file__)) + "\dados_7GHz\\"
+        os.path.abspath(__file__)) + "\\dados_7GHz\\"
 
 
 def calculo_de_indice(df, ponto_escolhido):
@@ -124,7 +124,7 @@ def load_dados(ano, filename):
             "/Savef/" + str(ano) + "/"
     else:
         path = os.path.dirname(os.path.abspath(__file__)) + \
-            "\Savef\\" + str(ano) + "\\"
+            "\\Savef\\" + str(ano) + "\\"
     dados = readsav(path + filename)
 
     data = dia_mes_ano_filename(filename)
@@ -146,7 +146,7 @@ def load_dados(ano, filename):
     data_gregoriano = dt.date(
         data['ano'], data['mes'], data['dia']).toordinal()
 
-    time = num2date(data_gregoriano + dados.time/3600./24.)
+    time = num2date(data_gregoriano + dados.time / 3600. / 24.)
 
     # Dados transpostos.
     transposed_data = np.transpose([

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import platform
 import datetime as dt
 import numpy as np
 import pandas as pd
@@ -20,8 +21,8 @@ class Utils:
         filename (str):  Nome do arquivo.
         CAMINHO_ABSOLUTO (str):  Caminho usado para salvar as images,
             e procurar arquivos.
-        df (DataFrame): aa.
-        diretorio (str): aa.
+        df (DataFrame): Dataframe com os dados do dia.
+        diretorio (str): diretório em que os dados serão alvos.
     """
 
     # posiçáo começa vazio e vai acrescentando o clique conforme
@@ -31,8 +32,12 @@ class Utils:
     def __init__(self, filename):
         self.filename = filename
         # Caminho para todos os arquivos salvos.
-        self.CAMINHO_ABSOLUTO = os.path.dirname(
-                os.path.abspath(__file__)) + "\dados_7 GHz\\"
+        if platform.system() == "Linux":
+            self.CAMINHO_ABSOLUTO = os.path.dirname(
+                    os.path.abspath(__file__)) + "/dados_7 GHz/"
+        else:
+            self.CAMINHO_ABSOLUTO = os.path.dirname(
+                    os.path.abspath(__file__)) + "\\dados_7 GHz\\"
 
     @property
     def get_df(self):
@@ -64,12 +69,11 @@ class Utils:
         n1 = np.argmin(np.abs(self.df.index.to_pydatetime() - ponto_escolhido))
         return n, n1
 
-    @classmethod
-    def onclick(cls, event):
+    def onclick(self, event):
         # Anexa os dados do clique na list posicao.
-        cls.posicao.append([event.xdata, event.ydata])
+        self.posicao.append([event.xdata, event.ydata])
         # Imprime uma linha no local clicado.
-        plt.plot([cls.posicao[-1][0], cls.posicao[-1][0]], [-150, 150])
+        plt.plot([cls.posicao[-1][0], self.posicao[-1][0]], [-150, 150])
 
     def dia_mes_ano_filename(self, load_dados=True):
         # Adiciona 20 no inicio do ano, já que o ano está no formato AA.
@@ -90,7 +94,13 @@ class Utils:
         return dia + mes + ano
 
     def load_dados(self, ano):
-        path = 'C:/Users/Andre/Desktop/Lucas/Savef/' + str(ano) + '/'
+        if platform.system() == "Linux":
+            path = os.path.dirname(os.path.abspath(__file__)) + \
+                "/Savef/" + str(ano) + "/"
+        else:
+            path = os.path.dirname(os.path.abspath(__file__)) + \
+                "\\Savef\\" + str(ano) + "\\"
+
         dados = readsav(path + self.filename)
 
         data = self.dia_mes_ano_filename(self.filename)
@@ -191,7 +201,8 @@ class Utils:
         ]
         return dados_finais
 
-    def ponto_mais_proximo(self, lista, numero):
+    @staticmethod
+    def ponto_mais_proximo(lista, numero):
         """
         Essa função pega o número mais próximo, de um certo número dentro
         de uma lista.
