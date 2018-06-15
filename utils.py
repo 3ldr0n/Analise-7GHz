@@ -21,8 +21,16 @@ else:
 
 
 def calculo_de_indice(df, ponto_escolhido):
-    # TODO
-    # Documentar essa função.
+    """[summary]
+    
+    Arguments:
+        df {daframe} -- [description]
+        ponto_escolhido {} -- [description]
+    
+    Returns:
+        [type] -- [description]
+    """
+
     n = df.iloc[np.argmin(np.abs(df.index.to_pydatetime() - ponto_escolhido))]
     # Retorna o tempo no formato datetime.
     # O tempo e usado como posicao, pois se trata do eixo x.
@@ -36,6 +44,12 @@ posicao = []
 
 
 def onclick(event):
+    """[summary]
+    
+    Arguments:
+        event {[type]} -- [description]
+    """
+
     # Anexa os dados do clique na list posição.
     posicao.append([event.xdata, event.ydata])
     # Imprime uma linha no local clicado.
@@ -43,6 +57,22 @@ def onclick(event):
 
 
 def dia_mes_ano_filename(filename, load_dados=True):
+    """Cria um dicionário que contem o dia, mes e o ano.
+    Ou retorna uma string da seguinte forma: diamesano
+    
+    Arguments:
+        filename {str} -- O nome do arquivo.
+   
+    Keyword Arguments:
+        load_dados {bool} -- Booleano para saber se essa função está sendo
+                            usada dentro da função load_dados.
+                            (default: {True})
+    
+    Returns:
+        {str or dict} -- Retorna um dicionário com a data, ou uma string com
+                        a data.
+    """
+
     # Adiciona 20 no inicio do ano, ja que o ano esta no formato AA.
     ano = int('20' + filename[4:6])
     mes = int(filename[0:2])
@@ -62,6 +92,15 @@ def dia_mes_ano_filename(filename, load_dados=True):
 
 
 def mes_upper(mes):
+    """Dado um mes (número), retorna o mes 
+    
+    Arguments:
+        mes {[type]} -- [description]
+    
+    Returns:
+        [type] -- [description]
+    """
+
     months = [
         "JAN", "FEV", "MAR", "APR", "MAY", "JUN",
         "JUL", "AUG", "SEP", "OUT", "NOV", "DEC"
@@ -73,6 +112,15 @@ def mes_upper(mes):
 
 
 def mes_lower(mes):
+    """[summary]
+    
+    Arguments:
+        mes {[type]} -- [description]
+    
+    Returns:
+        [type] -- [description]
+    """
+
     months = [
         "jan", "fev", "mar", "apr", "may", "jun",
         "jul", "aug", "sep", "out", "nov", "dec"
