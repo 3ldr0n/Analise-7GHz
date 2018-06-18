@@ -60,8 +60,6 @@ class Utils:
         return self.CAMINHO_ABSOLUTO
 
     def calculo_de_indice(self, ponto_escolhido):
-        # TODO
-        # Documentar essa função.
         n = self.df.iloc[np.argmin(np.abs(
             self.df.index.to_pydatetime() - ponto_escolhido))]
         # Retorna o tempo no formato datetime.
@@ -73,7 +71,7 @@ class Utils:
         # Anexa os dados do clique na list posicao.
         self.posicao.append([event.xdata, event.ydata])
         # Imprime uma linha no local clicado.
-        plt.plot([cls.posicao[-1][0], self.posicao[-1][0]], [-150, 150])
+        plt.plot([self.posicao[-1][0], self.posicao[-1][0]], [-150, 150])
 
     def dia_mes_ano_filename(self, load_dados=True):
         # Adiciona 20 no inicio do ano, já que o ano está no formato AA.
