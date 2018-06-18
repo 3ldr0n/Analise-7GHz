@@ -21,19 +21,20 @@ else:
 
 
 def calculo_de_indice(df, ponto_escolhido):
-    """[summary]
+    """Retorna os dados do dataframe de um certo instante, dado o horário.
+    O index do dataframe deve ser um horário.
 
     Arguments:
-        df {daframe} -- [description]
-        ponto_escolhido {} -- [description]
+        df {dataframe} -- Dataframe com os dados.
+        ponto_escolhido {datetime} -- O horário de que se quer pegar os dados.
 
     Returns:
-        [type] -- [description]
+        n {pandas.Series} -- Os dados do exato momento.
+        n1 {int} -- O indice do momento.
     """
 
     n = df.iloc[np.argmin(np.abs(df.index.to_pydatetime() - ponto_escolhido))]
-    # Retorna o tempo no formato datetime.
-    # O tempo e usado como posicao, pois se trata do eixo x.
+    # O tempo é usado como posição, pois se trata do eixo x.
     n1 = np.argmin(np.abs(df.index.to_pydatetime() - ponto_escolhido))
     return n, n1
 
@@ -44,7 +45,7 @@ posicao = []
 
 
 def onclick(event):
-    """[summary]
+    """Pega a posição clicada em um gráfico.
 
     Arguments:
         event {[type]} -- [description]
@@ -53,52 +54,18 @@ def onclick(event):
     # Anexa os dados do clique na list posição.
     posicao.append([event.xdata, event.ydata])
     # Imprime uma linha no local clicado.
-    plt.plot([posicao[-1][0], posicao[-1][0]], [-20, 700])
-
-
-def dia_mes_ano_filename(filename, load_dados=True):
-    """Cria um dicionário que contem o dia, mes e o ano.
-    Ou retorna uma string da seguinte forma: diamesano
-
-    Arguments:
-        filename {str} -- O nome do arquivo.
-
-    Keyword Arguments:
-        load_dados {bool} -- Booleano para saber se essa função está sendo
-                            usada dentro da função load_dados.
-                            (default: {True})
-
-    Returns:
-        {str or dict} -- Retorna um dicionário com a data, ou uma string com
-                        a data.
-    """
-
-    # Adiciona 20 no inicio do ano, ja que o ano esta no formato AA.
-    ano = int('20' + filename[4:6])
-    mes = int(filename[0:2])
-    dia = int(filename[2:4])
-
-    # Coloca a data em um dicionário.
-    data = {
-        'ano': ano,
-        'mes': mes,
-        'dia': dia
-    }
-
-    if load_dados:
-        return data
-
-    return dia + mes + ano
+    plt.plot([posicao[-1][0], posicao[-1][0]], [-20, 100])
 
 
 def mes_upper(mes):
-    """Dado um mes (número), retorna o mes
+    """Dado um mes (número), retorna o mes no formato dos arquivos do
+    RSTN com as letras maiúsculas.
 
     Arguments:
-        mes {[type]} -- [description]
+        mes {int or str} -- O número do mês.
 
     Returns:
-        [type] -- [description]
+        {str} -- O mês no formato dos arquivos do RSTN.
     """
 
     months = [
@@ -112,13 +79,14 @@ def mes_upper(mes):
 
 
 def mes_lower(mes):
-    """[summary]
+    """Dado um mes (número), retorna o mes no formato dos arquivos do
+    RSTN com as letras minúsculas.
 
     Arguments:
-        mes {[type]} -- [description]
+        mes {int or str} -- O número do mês.
 
     Returns:
-        [type] -- [description]
+        {str} -- O mês no formato dos arquivos do RSTN.
     """
 
     months = [
@@ -132,6 +100,16 @@ def mes_lower(mes):
 
 
 def arquivo_existe(caminho, mes):
+    """Confirma se o arquivo do RSTN existe.
+    
+    Arguments:
+        caminho {str} -- O caminho para o arquivo.
+        mes {str} -- O mês do arquivo.
+    
+    Returns:
+        {bool} -- True se o arquivo existe.
+    """
+
 
     lista_de_arquivos = os.listdir(caminho)
 
@@ -143,6 +121,17 @@ def arquivo_existe(caminho, mes):
 
 
 def caminho_rstn(ano, mes, dia):
+    """Retorna o caminho para o arquivo do RSTN.
+    
+    Arguments:
+        ano {str or int} -- Ano do arquivo. 
+        mes {str or int} -- Mês do arquivo. 
+        dia {str or int} -- Dia do arquivo. 
+    
+    Returns:
+        {str} -- O caminho relativo para os arquivos.
+    """
+
 
     if platform.system() == "Linux":
         caminho = "dados_rstn/" + str(ano) + "/0" + str(mes) + "/"
@@ -166,21 +155,34 @@ def caminho_rstn(ano, mes, dia):
         return caminho + arquivo
 
 
-def load_dados(ano, filename):
+def load_dados(dia, mes, ano):
+    """Carrega os dados do 7 giga em um dataframe.
+    
+    Arguments:
+        dia {str} -- Dia do evento.
+        mes {str} -- Mes do evento.
+        ano {str} -- Ano do evento.
+    
+    Returns:
+        df {Dataframe} -- Os dados lidos do arquivo sav.
+        time {datetime} -- Os horários registrados no dataframe.
+        diretorio {str} -- O diretório em que os dados serão salvos.
+    """
+
     if platform.system() == "Linux":
         path = os.path.dirname(os.path.abspath(__file__)) + \
             "/Savef/" + str(ano) + "/"
     else:
         path = os.path.dirname(os.path.abspath(__file__)) + \
             "\\Savef\\" + str(ano) + "\\"
-    dados = readsav(path + filename)
 
-    data = dia_mes_ano_filename(filename)
-    # rstn = caminho_rstn(data['ano'], data['mes'], data['dia'])
+    filename = mes + dia + ano[2:] + "09"
+    dados = readsav(path + filename)
+    data = dt.date(int(ano), int(mes), int(dia))
 
     # O nome do diretorio segue o formato aaaa-mm-dd. Essa linha cria
     # o nome nesse formato.
-    diretorio = str(dt.date(data['ano'], data['mes'], data['dia']))
+    diretorio = str(data)
 
     # Confere se o diretório já existe.
     if os.path.exists(CAMINHO_ABSOLUTO + diretorio):
@@ -191,8 +193,7 @@ def load_dados(ano, filename):
 
     # dt.date(ano, dia, mes) Formata a data no formato aaaa-dd-mm.
     # .toordinal formata no formato gregoriano.
-    data_gregoriano = dt.date(
-        data['ano'], data['mes'], data['dia']).toordinal()
+    data_gregoriano = data.toordinal()
 
     time = num2date(data_gregoriano + dados.time / 3600. / 24.)
 
@@ -203,7 +204,7 @@ def load_dados(ano, filename):
 
     df = pd.DataFrame(transposed_data, index=time, columns=['R', 'L'])
 
-    return df, time, diretorio, data
+    return df, time, diretorio
 
 
 def calculo_da_media(df, rstn=False):
