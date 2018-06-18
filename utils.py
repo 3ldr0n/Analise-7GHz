@@ -176,7 +176,12 @@ def load_dados(dia, mes, ano):
         path = os.path.dirname(os.path.abspath(__file__)) + \
             "\\Savef\\" + str(ano) + "\\"
 
-    filename = mes + dia + ano[2:] + "09"
+    filename = mes + dia + ano[2:]
+    files = os.listdir(path)
+    for file in files:
+        if filename in file:
+            filename = file
+
     dados = readsav(path + filename)
     data = dt.date(int(ano), int(mes), int(dia))
 
