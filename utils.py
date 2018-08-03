@@ -4,9 +4,9 @@ import os
 import datetime as dt
 import platform
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 
 from matplotlib.dates import num2date
 from scipy.io import readsav

@@ -3,15 +3,16 @@
 import os
 import platform
 import datetime as dt
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 
 from matplotlib.dates import num2date
 from scipy.io import readsav
 
 
-class Utils:
+class Utils(object):
     """Funções úteis nas analises.
 
     Args:
