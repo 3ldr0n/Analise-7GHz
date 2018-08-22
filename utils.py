@@ -221,14 +221,14 @@ def calculo_da_media(df, rstn=False):
     Exemplo de uso:
         Calcular a media de um grafico a partir de dois pontos selecionados de
         um grafico.
-    
+
     Arguments:
         df {DataFrame} -- Dataframe com os dados.
-    
+
     Keyword Arguments:
         rstn {bool} -- Define se está fazendo esse calculos para os dados do
                         rstn (default: {False})
-    
+
     Returns:
         {list} -- Contém os indícies e as médias.
     """
@@ -262,7 +262,7 @@ def calculo_da_media(df, rstn=False):
         # Medias calculadas.
         media_final = np.median(media)
 
-        # Se for a ultima vez chamando essa função, será criado duas colunas
+        # Se for a ultima vez chamando essa função, serão criadas duas colunas
         # no dataframe. As quais vão ser todos os valores menos as medias
         # R e L, criando assim R e L normalizados.
 
