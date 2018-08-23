@@ -101,11 +101,11 @@ def mes_lower(mes):
 
 def arquivo_existe(caminho, mes):
     """Confirma se o arquivo do RSTN existe.
-    
+
     Arguments:
         caminho {str} -- O caminho para o arquivo.
         mes {str} -- O mês do arquivo.
-    
+
     Returns:
         {bool} -- True se o arquivo existe.
     """
@@ -122,12 +122,12 @@ def arquivo_existe(caminho, mes):
 
 def caminho_rstn(ano, mes, dia):
     """Retorna o caminho para o arquivo do RSTN.
-    
+
     Arguments:
-        ano {str or int} -- Ano do arquivo. 
-        mes {str or int} -- Mês do arquivo. 
-        dia {str or int} -- Dia do arquivo. 
-    
+        ano {str or int} -- Ano do arquivo.
+        mes {str or int} -- Mês do arquivo.
+        dia {str or int} -- Dia do arquivo.
+
     Returns:
         {str} -- O caminho relativo para os arquivos.
     """
@@ -157,12 +157,12 @@ def caminho_rstn(ano, mes, dia):
 
 def load_dados(dia, mes, ano):
     """Carrega os dados do 7 giga em um dataframe.
-    
+
     Arguments:
         dia {str} -- Dia do evento.
         mes {str} -- Mes do evento.
         ano {str} -- Ano do evento.
-    
+
     Returns:
         df {Dataframe} -- Os dados lidos do arquivo sav.
         time {datetime} -- Os horários registrados no dataframe.
