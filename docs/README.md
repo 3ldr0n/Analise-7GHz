@@ -33,17 +33,27 @@ Faz o plot do evento (R e L juntos), do I e do V.
 
 ### 07ª célula
 
-
+Baixa o arquivo do RSTN do dia, e cria um dataframe.
 
 ### 08ª célula
 
+Apaga os dados das frequências que não serão utilizadas.
+
 ### 09ª célula
+
+Gera o gráfico do RSTN, para remover o background.
 
 ### 10ª célula
 
+Remove o background.
+
 ### 11ª célula
 
+Pega o ponto no RSTN que é o pico no 7GHz.
+
 ### 12ª célula
+
+"Monta" o espectro rádio.
 
 ### 13ª célula
 
