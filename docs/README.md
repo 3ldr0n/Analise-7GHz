@@ -45,7 +45,7 @@ Gera o gráfico do RSTN, para remover o background.
 
 ### 10ª célula
 
-Remove o background.
+Faz o plot dos dados depois da remoção do background.
 
 ### 11ª célula
 
@@ -57,22 +57,44 @@ Pega o ponto no RSTN que é o pico no 7GHz.
 
 ### 13ª célula
 
+Cria um objeto do tipo TimeRange do comeco ao fim do evento, para pegar os dados do goes nesse período.
+
 ### 14ª célula
+
+Faz o plot dos dados do GOES.
 
 ### 15ª célula
 
+Faz o plot dos dados do GOES (pelo sunpy), e salva a imagem.
+
 ### 16ª célula
+
+Lê o arquivo do report do noaa e procura por regiões ativas no timerange.
 
 ### 17ª célula
 
+"Seta" a o código da região ativa, ou None(string).
+
 ### 18ª célula
+
+Gera o gráfico do evento para selecionar o ponto de início do evento.
 
 ### 19ª célula
 
+Faz os cálculos dos pontos e pega o horário exato do pico.
+
 ### 20ª célula
+
+Faz os cálculos do I e V.
 
 ### 21ª célula
 
+Calcula o grau de polarização;.
+
 ### 22ª célula
 
+Gera o gráfico final do evento em 7GHz, do evento pelo GOES e o espectro. E salva a imagem.
+
 ### 23ª célula
+
+Salva todos os dados no arquivo dados_finais/dados.csv
