@@ -61,40 +61,36 @@ Cria um objeto do tipo TimeRange do comeco ao fim do evento, para pegar os dados
 
 ### 14ª célula
 
-Faz o plot dos dados do GOES.
+Faz o plot dos dados do GOES, e salva o gráfico.
 
 ### 15ª célula
 
-Faz o plot dos dados do GOES (pelo sunpy), e salva a imagem.
+Lê o arquivo do report do noaa e procura por regiões ativas no timerange.
 
 ### 16ª célula
 
-Lê o arquivo do report do noaa e procura por regiões ativas no timerange.
+"Seta" a o código da região ativa, ou None(string).
 
 ### 17ª célula
 
-"Seta" a o código da região ativa, ou None(string).
+Gera o gráfico do evento para selecionar o ponto de início do evento.
 
 ### 18ª célula
 
-Gera o gráfico do evento para selecionar o ponto de início do evento.
+Faz os cálculos dos pontos e pega o horário exato do pico.
 
 ### 19ª célula
 
-Faz os cálculos dos pontos e pega o horário exato do pico.
+Faz os cálculos do I e V.
 
 ### 20ª célula
 
-Faz os cálculos do I e V.
+Calcula o grau de polarização;.
 
 ### 21ª célula
 
-Calcula o grau de polarização;.
-
-### 22ª célula
-
 Gera o gráfico final do evento em 7GHz, do evento pelo GOES e o espectro. E salva a imagem.
 
-### 23ª célula
+### 22ª célula
 
 Salva todos os dados no arquivo dados_finais/dados.csv
