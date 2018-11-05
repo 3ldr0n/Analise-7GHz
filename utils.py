@@ -48,7 +48,7 @@ def onclick(event):
     """Pega a posição clicada em um gráfico.
 
     Arguments:
-        event {[type]} -- [description]
+        event {} -- Evento de clique no canvas.
     """
 
     # Anexa os dados do clique na list posição.
