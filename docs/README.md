@@ -94,3 +94,4 @@ Gera o gráfico final do evento em 7GHz, do evento pelo GOES e o espectro. E sal
 ### 22ª célula
 
 Salva todos os dados no arquivo dados_finais/dados.csv
+
