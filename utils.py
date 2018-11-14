@@ -24,13 +24,20 @@ def calculo_de_indice(df, ponto_escolhido):
     """Retorna os dados do dataframe de um certo instante, dado o horário.
     O index do dataframe deve ser um horário.
 
-    Arguments:
-        df {dataframe} -- Dataframe com os dados.
-        ponto_escolhido {datetime} -- O horário de que se quer pegar os dados.
+    Parameters
+    ----------
+    df: dataframe
+        Dataframe com os dados.
+    ponto_escolhido: datetime
+        O horário de que se quer pegar os dados.
 
-    Returns:
-        n {pandas.Series} -- Os dados do exato momento.
-        n1 {int} -- O indice do momento.
+    Returns
+    -------
+    n: pandas.Series
+        Os dados do exato momento.
+    n1: int
+        O indice do momento.
+
     """
 
     n = df.iloc[np.argmin(np.abs(df.index.to_pydatetime() - ponto_escolhido))]
@@ -47,10 +54,14 @@ posicao = []
 def onclick(event):
     """Pega a posição clicada em um gráfico.
 
-    Arguments:
-        event {} -- Evento de clique no canvas.
+    Parameters
+    ----------
+    event: matplotlib.backend_bases.Event
+        Evento de clique no canvas.
+
     """
 
+    print(event)
     # Anexa os dados do clique na list posição.
     posicao.append([event.xdata, event.ydata])
     # Imprime uma linha no local clicado.
@@ -61,11 +72,16 @@ def mes_upper(mes):
     """Dado um mes (número), retorna o mes no formato dos arquivos do
     RSTN com as letras maiúsculas.
 
-    Arguments:
-        mes {int or str} -- O número do mês.
+    Parameters
+    ----------
+    mes: int or str
+        O número do mês.
 
-    Returns:
-        {str} -- O mês no formato dos arquivos do RSTN.
+    Returns
+    -------
+    month: str
+        O mês no formato dos arquivos do RSTN.
+
     """
 
     months = [
@@ -82,11 +98,15 @@ def mes_lower(mes):
     """Dado um mes (número), retorna o mes no formato dos arquivos do
     RSTN com as letras minúsculas.
 
-    Arguments:
-        mes {int or str} -- O número do mês.
+    Parameters
+    ----------
+    mes: int or str
+        O número do mês.
 
-    Returns:
-        {str} -- O mês no formato dos arquivos do RSTN.
+    Returns
+    -------
+    month: str
+        O mês no formato dos arquivos do RSTN.
     """
 
     months = [
@@ -102,12 +122,17 @@ def mes_lower(mes):
 def arquivo_existe(caminho, mes):
     """Confirma se o arquivo do RSTN existe.
 
-    Arguments:
-        caminho {str} -- O caminho para o arquivo.
-        mes {str} -- O mês do arquivo.
+    Parameters
+    ----------
+    caminho: str
+        O caminho para o arquivo.
+    mes: str
+        O mês do arquivo.
 
-    Returns:
-        {bool} -- True se o arquivo existe.
+    Returns
+    -------
+    bool
+        True se o arquivo existe.
     """
 
 
@@ -123,13 +148,19 @@ def arquivo_existe(caminho, mes):
 def caminho_rstn(ano, mes, dia):
     """Retorna o caminho para o arquivo do RSTN.
 
-    Arguments:
-        ano {str or int} -- Ano do arquivo.
-        mes {str or int} -- Mês do arquivo.
-        dia {str or int} -- Dia do arquivo.
+    Parameters
+    ----------
+    ano: str or int
+        Ano do arquivo.
+    mes: str or int
+        Mês do arquivo.
+    dia: str or int
+        Dia do arquivo.
 
-    Returns:
-        {str} -- O caminho relativo para os arquivos.
+    Returns
+    -------
+    str
+        O caminho relativo para os arquivos.
     """
 
 
@@ -158,15 +189,23 @@ def caminho_rstn(ano, mes, dia):
 def load_dados(dia, mes, ano):
     """Carrega os dados do 7 giga em um dataframe.
 
-    Arguments:
-        dia {str} -- Dia do evento.
-        mes {str} -- Mes do evento.
-        ano {str} -- Ano do evento.
+    Parameters
+    ----------
+    dia: str
+        Dia do evento.
+    mes: str
+        Mes do evento.
+    ano: str
+        Ano do evento.
 
-    Returns:
-        df {Dataframe} -- Os dados lidos do arquivo sav.
-        time {datetime} -- Os horários registrados no dataframe.
-        diretorio {str} -- O diretório em que os dados serão salvos.
+    Returns
+    -------
+    df: Dataframe
+        Os dados lidos do arquivo sav.
+    time: datetime:
+        Os horários registrados no dataframe.
+    diretorio: str
+        O diretório em que os dados serão salvos.
     """
 
     if platform.system() == "Linux":
@@ -218,19 +257,23 @@ def calculo_da_media(df, rstn=False):
     "nome_da_coluna_original" mais "_nomalizado", ja que usamos essa funcao
     para normalizar os graficos.
 
-    Exemplo de uso:
-        Calcular a media de um grafico a partir de dois pontos selecionados de
-        um grafico.
 
-    Arguments:
-        df {DataFrame} -- Dataframe com os dados.
+    Parameters
+    ----------
+    df: DataFrame
+        Dataframe com os dados.
+    rstn: bool, optional
+        Define se está fazendo esse calculos para os dados do rstn
 
-    Keyword Arguments:
-        rstn {bool} -- Define se está fazendo esse calculos para os dados do
-                        rstn (default: {False})
+    Returns
+    -------
+    list
+        Os indícies e as médias.
 
-    Returns:
-        {list} -- Contém os indícies e as médias.
+    Example
+    -------
+        Calcular a media de um grafico a partir de dois pontos selecionados
+        de um grafico.
     """
 
     # Ponto antes e depois do evento, e dois pontos antes para a media.(LFA)
@@ -281,8 +324,7 @@ def calculo_da_media(df, rstn=False):
 
 
 def ponto_mais_proximo(lista, numero):
-    """
-    Essa funcao pega o número mais próximo, de um certo número dentro
+    """Essa funcao pega o número mais próximo, de um certo número dentro
     de uma lista.
     """
     return min(lista, key=lambda n: abs(n - (numero)))
