@@ -239,7 +239,8 @@ def load_dados(dia, mes, ano):
     # .toordinal formata no formato gregoriano.
     data_gregoriano = data.toordinal()
 
-    time = num2date(data_gregoriano + dados.time / 3600. / 24.)
+    time = num2date(data_gregoriano + dados.time / 3600. / 24.,
+                        tz=dt.timezone.utc)
 
     # Dados transpostos.
     transposed_data = np.transpose([
