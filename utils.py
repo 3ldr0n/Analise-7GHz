@@ -40,10 +40,10 @@ def calculo_de_indice(df, ponto_escolhido):
 
     """
 
-    n = df.iloc[np.argmin(np.abs(df.index.to_pydatetime() - ponto_escolhido))]
+    dado = df.iloc[np.argmin(np.abs(df.index.to_pydatetime() - ponto_escolhido))]
     # O tempo é usado como posição, pois se trata do eixo x.
-    n1 = np.argmin(np.abs(df.index.to_pydatetime() - ponto_escolhido))
-    return n, n1
+    indice = np.argmin(np.abs(df.index.to_pydatetime() - ponto_escolhido))
+    return dado, indice
 
 
 # posicao comeca vazio e vai acrescentando
@@ -275,6 +275,7 @@ def calculo_da_media(df, rstn=False):
     -------
         Calcular a media de um grafico a partir de dois pontos selecionados
         de um grafico.
+
     """
 
     # Ponto antes e depois do evento, e dois pontos antes para a media.(LFA)
