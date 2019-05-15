@@ -89,7 +89,6 @@ def mes_upper(mes):
         "JUL", "AUG", "SEP", "OUT", "NOV", "DEC"
     ]
 
-    # Returns the corresponding month to dowload the file.
     index = int(mes) - 1
     return months[index]
 
@@ -114,76 +113,8 @@ def mes_lower(mes):
         "jul", "aug", "sep", "out", "nov", "dec"
     ]
 
-    # Returns the corresponding month to dowload the file.
     index = int(mes) - 1
     return months[index]
-
-
-def arquivo_existe(caminho, mes):
-    """Confirma se o arquivo do RSTN existe.
-
-    Parameters
-    ----------
-    caminho: str
-        O caminho para o arquivo.
-    mes: str
-        O mês do arquivo.
-
-    Returns
-    -------
-    bool
-        True se o arquivo existe.
-    """
-
-
-    lista_de_arquivos = os.listdir(caminho)
-
-    for arquivo in lista_de_arquivos:
-        if mes in arquivo:
-            return True
-
-    return False
-
-
-def caminho_rstn(ano, mes, dia):
-    """Retorna o caminho para o arquivo do RSTN.
-
-    Parameters
-    ----------
-    ano: str or int
-        Ano do arquivo.
-    mes: str or int
-        Mês do arquivo.
-    dia: str or int
-        Dia do arquivo.
-
-    Returns
-    -------
-    str
-        O caminho relativo para os arquivos.
-    """
-
-
-    if platform.system() == "Linux":
-        caminho = "dados_rstn/" + str(ano) + "/0" + str(mes) + "/"
-    else:
-        caminho = "dados_rstn\\" + str(ano) + "\\0" + str(mes) + "\\"
-    # upper.
-    if dia < 10:
-        dia = "0" + str(dia)
-    else:
-        dia = str(dia)
-
-    arquivo = dia + mes_lower(mes) + str(ano)[2:] + ".k7o"
-
-    if arquivo_existe(caminho, mes_lower(mes)):
-        print(arquivo)
-        return caminho + arquivo
-    else:
-        # lower.
-        arquivo = dia + mes_upper(mes) + str(ano)[2:] + ".K7O"
-        print(arquivo)
-        return caminho + arquivo
 
 
 def load_dados(dia, mes, ano):
