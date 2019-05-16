@@ -253,6 +253,14 @@ def calculo_da_media(df, rstn=False):
         indice_grafico1, indice_grafico2, todas_medias,
         tempo1_flare, tempo2_flare
     ]
+
+    dict_dados_finais = {
+        "indice_grafico_inicio": indice_grafico1,
+        "indice_grafico_final": indice_grafico2,
+        "medias": todas_medias,
+        "inicio_flare": tempo1_flare,
+        "fim_flare": tempo2_flare,
+    }
     return dados_finais
 
 
