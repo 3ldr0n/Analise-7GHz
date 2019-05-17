@@ -106,6 +106,7 @@ def mes_lower(mes):
     -------
     month: str
         O mês no formato dos arquivos do RSTN.
+
     """
 
     months = [
@@ -137,6 +138,7 @@ def load_dados(dia, mes, ano):
         Os horários registrados no dataframe.
     diretorio: str
         O diretório em que os dados serão salvos.
+
     """
 
     if platform.system() == "Linux":
@@ -171,7 +173,7 @@ def load_dados(dia, mes, ano):
     data_gregoriano = data.toordinal()
 
     time = num2date(data_gregoriano + dados.time / 3600. / 24.,
-                        tz=dt.timezone.utc)
+                    tz=dt.timezone.utc)
 
     # Dados transpostos.
     transposed_data = np.transpose([
@@ -219,12 +221,16 @@ def remove_background(df, rstn=False):
     tempo_background_inicio = num2date(posicao[-1][0])
     tempo_background_fim = num2date(posicao[-2][0])
 
-    indice_do_tempo_background_inicio = calculo_de_indice(df, tempo_background_inicio)
-    indice_do_tempo_background_fim = calculo_de_indice(df, tempo_background_fim)
+    indice_do_tempo_background_inicio = calculo_de_indice(
+        df, tempo_background_inicio)
+    indice_do_tempo_background_fim = calculo_de_indice(
+        df, tempo_background_fim)
 
     # Calcula os indices dos gráficos 1 e 2.
-    indice_inicio_evento, tempo1_flare = calculo_de_indice(df, posicao_grafico1)
-    indice_fim_evento, tempo2_flare = calculo_de_indice(df, posicao_grafico2)
+    indice_inicio_evento, tempo1_flare = calculo_de_indice(
+        df, posicao_grafico1)
+    indice_fim_evento, tempo2_flare = calculo_de_indice(
+        df, posicao_grafico2)
 
     # Inicializa um dicionario que vai guardar os dados,
     # normais e normalizados.
@@ -250,11 +256,6 @@ def remove_background(df, rstn=False):
     if rstn is True:
         return todas_medias
 
-    dados_finais = [
-        indice_inicio_evento, indice_fim_evento, todas_medias,
-        tempo1_flare, tempo2_flare
-    ]
-
     dict_dados_finais = {
         "indice_inicio_evento": indice_inicio_evento,
         "indice_fim_evento": indice_fim_evento,
@@ -270,7 +271,8 @@ def ponto_mais_proximo(lista, numero):
     """Essa funcao pega o número mais próximo, de um certo número dentro
     de uma lista.
     """
-    return min(lista, key=lambda n: abs(n - (numero)))
+    return min(lista, key=lambda n: abs(n - numero))
+
 
 def get_datetime(time):
     """Sets a GOES formatted date(string) to a datetime object.
