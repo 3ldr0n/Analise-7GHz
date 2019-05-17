@@ -183,7 +183,7 @@ def load_dados(dia, mes, ano):
     return df, time, diretorio
 
 
-def calculo_da_media(df, rstn=False):
+def remove_background(df, rstn=False):
     """Faz um calculo da media de todos os itens dentro de um dataframe,
     criando uma coluna com os dados ja com a media, chamada
     "nome_da_coluna_original" mais "_nomalizado", ja que usamos essa funcao
@@ -216,15 +216,15 @@ def calculo_da_media(df, rstn=False):
     posicao_grafico2 = num2date(posicao[-3][0])
 
     # Usados para calcular a média entre os pontos selecionados.
-    tempo1 = num2date(posicao[-1][0])
-    tempo2 = num2date(posicao[-2][0])
+    tempo_background_inicio = num2date(posicao[-1][0])
+    tempo_background_fim = num2date(posicao[-2][0])
 
-    indice_de_y1 = calculo_de_indice(df, tempo1)
-    indice_de_y2 = calculo_de_indice(df, tempo2)
+    indice_do_tempo_background_inicio = calculo_de_indice(df, tempo_background_inicio)
+    indice_do_tempo_background_fim = calculo_de_indice(df, tempo_background_fim)
 
     # Calcula os indices dos gráficos 1 e 2.
-    indice_grafico1, tempo1_flare = calculo_de_indice(df, posicao_grafico1)
-    indice_grafico2, tempo2_flare = calculo_de_indice(df, posicao_grafico2)
+    indice_inicio_evento, tempo1_flare = calculo_de_indice(df, posicao_grafico1)
+    indice_fim_evento, tempo2_flare = calculo_de_indice(df, posicao_grafico2)
 
     # Inicializa um dicionario que vai guardar os dados,
     # normais e normalizados.
@@ -232,8 +232,9 @@ def calculo_da_media(df, rstn=False):
     # Esse for passa por cada coluna do dataframe e calcula a media de seus
     # respectivos dados.
     for column in df.columns:
-        # Pega todos os pontos entre os pontos selecionados em t1 e t2.
-        media = np.array(df[column][indice_de_y2[1]:indice_de_y1[1]])
+        # Pega todos os pontos entre os pontos selecionados.
+        media = np.array(df[column][indice_do_tempo_background_fim[1]:
+                                    indice_do_tempo_background_inicio[1]])
 
         # Medias calculadas.
         media_final = np.median(media)
@@ -250,18 +251,19 @@ def calculo_da_media(df, rstn=False):
         return todas_medias
 
     dados_finais = [
-        indice_grafico1, indice_grafico2, todas_medias,
+        indice_inicio_evento, indice_fim_evento, todas_medias,
         tempo1_flare, tempo2_flare
     ]
 
     dict_dados_finais = {
-        "indice_grafico_inicio": indice_grafico1,
-        "indice_grafico_final": indice_grafico2,
+        "indice_inicio_evento": indice_inicio_evento,
+        "indice_fim_evento": indice_fim_evento,
         "medias": todas_medias,
         "inicio_flare": tempo1_flare,
         "fim_flare": tempo2_flare,
     }
-    return dados_finais
+
+    return dict_dados_finais
 
 
 def ponto_mais_proximo(lista, numero):
