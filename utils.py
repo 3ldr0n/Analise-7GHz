@@ -67,56 +67,6 @@ def onclick(event):
     plt.plot([posicao[-1][0], posicao[-1][0]], [-20, 100])
 
 
-def mes_upper(mes):
-    """Dado um mes (número), retorna o mes no formato dos arquivos do
-    RSTN com as letras maiúsculas.
-
-    Parameters
-    ----------
-    mes: int or str
-        O número do mês.
-
-    Returns
-    -------
-    month: str
-        O mês no formato dos arquivos do RSTN.
-
-    """
-
-    months = [
-        "JAN", "FEV", "MAR", "APR", "MAY", "JUN",
-        "JUL", "AUG", "SEP", "OUT", "NOV", "DEC"
-    ]
-
-    index = int(mes) - 1
-    return months[index]
-
-
-def mes_lower(mes):
-    """Dado um mes (número), retorna o mes no formato dos arquivos do
-    RSTN com as letras minúsculas.
-
-    Parameters
-    ----------
-    mes: int or str
-        O número do mês.
-
-    Returns
-    -------
-    month: str
-        O mês no formato dos arquivos do RSTN.
-
-    """
-
-    months = [
-        "jan", "fev", "mar", "apr", "may", "jun",
-        "jul", "aug", "sep", "out", "nov", "dec"
-    ]
-
-    index = int(mes) - 1
-    return months[index]
-
-
 def load_dados(dia, mes, ano):
     """Carrega os dados do 7 giga em um dataframe.
 
@@ -140,12 +90,8 @@ def load_dados(dia, mes, ano):
 
     """
 
-    if platform.system() == "Linux":
-        path = os.path.dirname(os.path.abspath(__file__)) + \
-            "/Savef/" + str(ano) + "/"
-    else:
-        path = os.path.dirname(os.path.abspath(__file__)) + \
-            "\\Savef\\" + str(ano) + "\\"
+    path = Path(os.path.dirname(os.path.abspath(__file__))).joinpath("Savef")
+    path = path.joinpath(str(ano))
 
     filename = mes + dia + ano[2:]
     files = os.listdir(path)
@@ -153,7 +99,7 @@ def load_dados(dia, mes, ano):
         if filename in file:
             filename = file
 
-    dados = readsav(path + filename)
+    dados = readsav(path.joinpath(filename))
 
     # Formata a data no formato aaaa-dd-mm.
     data = dt.date(int(ano), int(mes), int(dia))
