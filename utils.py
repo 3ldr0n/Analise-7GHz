@@ -8,16 +8,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from pathlib import Path
+
 from matplotlib.dates import num2date
 from scipy.io import readsav
 
 # Caminho para todos os arquivos salvos.
-if platform.system() == "Linux":
-    CAMINHO_ABSOLUTO = os.path.dirname(
-        os.path.abspath(__file__)) + "/dados_7GHz/"
-else:
-    CAMINHO_ABSOLUTO = os.path.dirname(
-        os.path.abspath(__file__)) + "\\dados_7GHz\\"
+CAMINHO_ABSOLUTO = Path(os.path.dirname(
+    os.path.abspath(__file__)) + "/dados_7GHz/")
 
 
 def calculo_de_indice(df, ponto_escolhido):
@@ -40,7 +38,8 @@ def calculo_de_indice(df, ponto_escolhido):
 
     """
 
-    dado = df.iloc[np.argmin(np.abs(df.index.to_pydatetime() - ponto_escolhido))]
+    dado = df.iloc[np.argmin(
+        np.abs(df.index.to_pydatetime() - ponto_escolhido))]
     # O tempo é usado como posição, pois se trata do eixo x.
     indice = np.argmin(np.abs(df.index.to_pydatetime() - ponto_escolhido))
     return dado, indice
@@ -155,6 +154,8 @@ def load_dados(dia, mes, ano):
             filename = file
 
     dados = readsav(path + filename)
+
+    # Formata a data no formato aaaa-dd-mm.
     data = dt.date(int(ano), int(mes), int(dia))
 
     # O nome do diretorio segue o formato aaaa-mm-dd. Essa linha cria
@@ -162,13 +163,11 @@ def load_dados(dia, mes, ano):
     diretorio = str(data)
 
     # Confere se o diretório já existe.
-    if os.path.exists(CAMINHO_ABSOLUTO + diretorio):
+    if CAMINHO_ABSOLUTO.joinpath(diretorio).exists():
         print("O diretorio já existe")
     else:
-        # Cria o diretorio.
-        os.mkdir(CAMINHO_ABSOLUTO + diretorio)
+        CAMINHO_ABSOLUTO.joinpath(diretorio).mkdir()
 
-    # dt.date(ano, dia, mes) Formata a data no formato aaaa-dd-mm.
     # .toordinal formata no formato gregoriano.
     data_gregoriano = data.toordinal()
 
