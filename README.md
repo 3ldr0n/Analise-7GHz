@@ -6,5 +6,6 @@ Notebook da analise do rádio telescópio 7GHz.
 
 ```bash
 pip install jupyterlab ipympl
+sudo chown -R $(whoami) ~/.npm
 jupyter labextension install @jupyter-widgets/jupyterlab-manager jupyter-matplotlib
 ```
