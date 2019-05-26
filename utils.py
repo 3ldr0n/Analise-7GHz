@@ -2,7 +2,6 @@
 
 import os
 import datetime as dt
-import platform
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -31,9 +30,9 @@ def calculo_de_indice(df, ponto_escolhido):
 
     Returns
     -------
-    n: pandas.Series
+    dado: pandas.Series
         Os dados do exato momento.
-    n1: int
+    indice: int
         O indice do momento.
 
     """
@@ -215,7 +214,9 @@ def remove_background(df, rstn=False):
 def ponto_mais_proximo(lista, numero):
     """Essa funcao pega o número mais próximo, de um certo número dentro
     de uma lista.
+
     """
+
     return min(lista, key=lambda n: abs(n - numero))
 
 
@@ -227,7 +228,9 @@ def get_datetime(time):
 
     Returns:
         {datetime} -- The date formatted in datetime.
+
     """
+
     year = int(time[0:4])
     month = int(time[5:7])
     day = int(time[8:10])
@@ -247,7 +250,9 @@ def get_correct_goes_index(goes_index, begin, end):
 
     Returns:
         begin, end {str} -- begin and and indexes from the dataframe.
+
     """
+
     difference = dt.timedelta(seconds=1)
     begin = get_datetime(begin)
     end = get_datetime(end)
