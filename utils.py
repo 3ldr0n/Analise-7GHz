@@ -3,11 +3,13 @@
 import datetime as dt
 import os
 from pathlib import Path
+from typing import List, Any, Dict, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
+from matplotlib.backend_bases import Event
 from matplotlib.dates import num2date
+from pandas import DataFrame, Index
 from scipy.io import readsav
 
 # Caminho para todos os arquivos salvos.
@@ -15,7 +17,7 @@ DATA_PATH = Path(os.path.dirname(
     os.path.abspath(__file__)) + "/dados_7GHz/")
 
 
-def calculo_de_indice(df, ponto_escolhido):
+def calculo_de_indice(df: DataFrame, ponto_escolhido: dt.datetime) -> Tuple[Any, np.ndarray]:
     """Retorna os dados do dataframe de um certo instante, dado o horário.
     O index do dataframe deve ser um horário.
 
@@ -47,7 +49,7 @@ def calculo_de_indice(df, ponto_escolhido):
 posicao = []
 
 
-def onclick(event):
+def onclick(event: Event):
     """Pega a posição clicada em um gráfico.
 
     Parameters
@@ -64,7 +66,7 @@ def onclick(event):
     plt.plot([posicao[-1][0], posicao[-1][0]], [-20, 100])
 
 
-def load_7ghz_data(dia, mes, ano):
+def load_7ghz_data(dia: str, mes: str, ano: str) -> Tuple[DataFrame, str]:
     """Carrega os dados do 7 giga em um dataframe.
 
     Parameters
@@ -105,12 +107,12 @@ def load_7ghz_data(dia, mes, ano):
         dados.fr.clip(-1000, 1000),
         dados.fl.clip(-1000, 1000)])
 
-    df = pd.DataFrame(transposed_data, index=time, columns=['R', 'L'])
+    df = DataFrame(transposed_data, index=time, columns=['R', 'L'])
 
     return df, diretorio
 
 
-def create_directory(year, month, day):
+def create_directory(year: str, month: str, day: str) -> Tuple[dt.date, str]:
     """Cria o diretório para os dados de um dia.
     O diretório segue o formato AAAA-MM-DD.
 
@@ -123,16 +125,18 @@ def create_directory(year, month, day):
     return date, directory
 
 
-def set_filename(ano, dia, mes, path):
-    filename = mes + dia + ano[2:]
+def set_filename(year: str, month: str, day: str, path: Path) -> str:
+    """Pega o nome do arquivo no formato que está salvo."""
+    filename = month + day + year[2:]
     files = os.listdir(path)
     for file in files:
         if filename in file:
             filename = file
+
     return filename
 
 
-def remove_background(df, rstn=False):
+def remove_background(df: DataFrame, rstn: bool = False) -> Dict:
     """Faz um calculo da media de todos os itens dentro de um dataframe,
     criando uma coluna com os dados ja com a media, chamada
     "nome_da_coluna_original" mais "_nomalizado", ja que usamos essa funcao
@@ -212,7 +216,7 @@ def remove_background(df, rstn=False):
     return dados_finais
 
 
-def ponto_mais_proximo(lista, numero):
+def ponto_mais_proximo(lista: List, numero: int) -> int:
     """Essa funcao pega o número mais próximo, de um certo número dentro
     de uma lista.
 
@@ -221,7 +225,7 @@ def ponto_mais_proximo(lista, numero):
     return min(lista, key=lambda n: abs(n - numero))
 
 
-def get_datetime(time):
+def get_datetime(time: str) -> dt.datetime:
     """Sets a GOES formatted date(string) to a datetime object.
 
     Arguments:
@@ -241,7 +245,7 @@ def get_datetime(time):
     return dt.datetime(year, month, day, hour, minute, second)
 
 
-def get_correct_goes_index(goes_index, begin, end):
+def get_correct_goes_index(goes_index: Index, begin: str, end: str):
     """Get begin and end indexes set from a timerange.
 
     Arguments:
@@ -250,7 +254,7 @@ def get_correct_goes_index(goes_index, begin, end):
         end {str} -- GOES formatted date of the ending point.
 
     Returns:
-        begin, end {str} -- begin and and indexes from the dataframe.
+        begin, end {datetime} -- begin and and indexes from the dataframe.
 
     """
 
