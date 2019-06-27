@@ -1,19 +1,17 @@
 # -*- coding: utf-8 -*-
 
-import os
 import datetime as dt
+import os
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-
-from pathlib import Path
-
 from matplotlib.dates import num2date
 from scipy.io import readsav
 
 # Caminho para todos os arquivos salvos.
-CAMINHO_ABSOLUTO = Path(os.path.dirname(
+DATA_PATH = Path(os.path.dirname(
     os.path.abspath(__file__)) + "/dados_7GHz/")
 
 
@@ -66,7 +64,7 @@ def onclick(event):
     plt.plot([posicao[-1][0], posicao[-1][0]], [-20, 100])
 
 
-def load_dados(dia, mes, ano):
+def load_7ghz_data(dia, mes, ano):
     """Carrega os dados do 7 giga em um dataframe.
 
     Parameters
@@ -82,8 +80,6 @@ def load_dados(dia, mes, ano):
     -------
     df: Dataframe
         Os dados lidos do arquivo sav.
-    time: datetime:
-        Os horários registrados no dataframe.
     diretorio: str
         O diretório em que os dados serão salvos.
 
@@ -92,26 +88,11 @@ def load_dados(dia, mes, ano):
     path = Path(os.path.dirname(os.path.abspath(__file__))).joinpath("Savef")
     path = path.joinpath(str(ano))
 
-    filename = mes + dia + ano[2:]
-    files = os.listdir(path)
-    for file in files:
-        if filename in file:
-            filename = file
+    filename = set_filename(ano, dia, mes, path)
 
     dados = readsav(path.joinpath(filename))
 
-    # Formata a data no formato aaaa-dd-mm.
-    data = dt.date(int(ano), int(mes), int(dia))
-
-    # O nome do diretorio segue o formato aaaa-mm-dd. Essa linha cria
-    # o nome nesse formato.
-    diretorio = str(data)
-
-    # Confere se o diretório já existe.
-    if CAMINHO_ABSOLUTO.joinpath(diretorio).exists():
-        print("O diretorio já existe")
-    else:
-        CAMINHO_ABSOLUTO.joinpath(diretorio).mkdir()
+    data, diretorio = create_directory(ano, dia, mes)
 
     # .toordinal formata no formato gregoriano.
     data_gregoriano = data.toordinal()
@@ -126,7 +107,29 @@ def load_dados(dia, mes, ano):
 
     df = pd.DataFrame(transposed_data, index=time, columns=['R', 'L'])
 
-    return df, time, diretorio
+    return df, diretorio
+
+
+def create_directory(year, month, day):
+    """Cria o diretório para os dados de um dia.
+    O diretório segue o formato AAAA-MM-DD.
+
+    """
+    date = dt.date(int(year), int(month), int(day))
+    directory = str(date)
+    if not DATA_PATH.joinpath(directory).exists():
+        DATA_PATH.joinpath(directory).mkdir()
+
+    return date, directory
+
+
+def set_filename(ano, dia, mes, path):
+    filename = mes + dia + ano[2:]
+    files = os.listdir(path)
+    for file in files:
+        if filename in file:
+            filename = file
+    return filename
 
 
 def remove_background(df, rstn=False):
@@ -158,8 +161,8 @@ def remove_background(df, rstn=False):
     # Ponto antes e depois do evento, e dois pontos antes para a media.(LFA)
 
     # Usados para selecionar uma parte especifica do grafico.
-    posicao_grafico1 = num2date(posicao[-4][0])
-    posicao_grafico2 = num2date(posicao[-3][0])
+    posicao_inicial_do_grafico = num2date(posicao[-4][0])
+    posicao_final_do_grafico = num2date(posicao[-3][0])
 
     # Usados para calcular a média entre os pontos selecionados.
     tempo_background_inicio = num2date(posicao[-1][0])
@@ -170,11 +173,10 @@ def remove_background(df, rstn=False):
     indice_do_tempo_background_fim = calculo_de_indice(
         df, tempo_background_fim)
 
-    # Calcula os indices dos gráficos 1 e 2.
-    indice_inicio_evento, tempo1_flare = calculo_de_indice(
-        df, posicao_grafico1)
-    indice_fim_evento, tempo2_flare = calculo_de_indice(
-        df, posicao_grafico2)
+    indice_inicio_evento, inicio_flare = calculo_de_indice(
+        df, posicao_inicial_do_grafico)
+    indice_fim_evento, fim_flare = calculo_de_indice(
+        df, posicao_final_do_grafico)
 
     # Inicializa um dicionario que vai guardar os dados,
     # normais e normalizados.
@@ -186,7 +188,6 @@ def remove_background(df, rstn=False):
         media = np.array(df[column][indice_do_tempo_background_fim[1]:
                                     indice_do_tempo_background_inicio[1]])
 
-        # Medias calculadas.
         media_final = np.median(media)
 
         # Se for a ultima vez chamando essa função, serão criadas duas colunas
@@ -200,15 +201,15 @@ def remove_background(df, rstn=False):
     if rstn is True:
         return todas_medias
 
-    dict_dados_finais = {
+    dados_finais = {
         "indice_inicio_evento": indice_inicio_evento,
         "indice_fim_evento": indice_fim_evento,
         "medias": todas_medias,
-        "inicio_flare": tempo1_flare,
-        "fim_flare": tempo2_flare,
+        "inicio_flare": inicio_flare,
+        "fim_flare": fim_flare,
     }
 
-    return dict_dados_finais
+    return dados_finais
 
 
 def ponto_mais_proximo(lista, numero):
@@ -262,14 +263,14 @@ def get_correct_goes_index(goes_index, begin, end):
     for index in goes_index:
         new_index = get_datetime(str(index)[0:19])
 
-        if ((new_index == begin or new_index == begin-difference or
-                new_index == begin-2*difference) and not found_begin):
+        if ((new_index == begin or new_index == begin - difference or
+             new_index == begin - 2 * difference) and not found_begin):
             found_begin = True
             begin = index
             continue
 
-        if ((new_index == end or new_index == end+difference or
-                new_index == end+2*difference) and not found_end):
+        if ((new_index == end or new_index == end + difference or
+             new_index == end + 2 * difference) and not found_end):
             found_end = True
             end = index
             continue
