@@ -13,7 +13,7 @@ from pandas import DataFrame, Index
 from scipy.io import readsav
 
 # Caminho para todos os arquivos salvos.
-DATA_PATH = Path(os.path.dirname(
+CAMINHO_ABSOLUTO = Path(os.path.dirname(
     os.path.abspath(__file__)) + "/dados_7GHz/")
 
 
@@ -91,6 +91,8 @@ def load_7ghz_data(dia: str, mes: str, ano: str) -> Tuple[DataFrame, str]:
     path = path.joinpath(str(ano))
 
     filename = set_filename(ano, dia, mes, path)
+    if not Path(filename).exists():
+        raise FileNotFoundError("Arquivo não existe")
 
     dados = readsav(path.joinpath(filename))
 
@@ -119,8 +121,8 @@ def create_directory(year: str, month: str, day: str) -> Tuple[dt.date, str]:
     """
     date = dt.date(int(year), int(month), int(day))
     directory = str(date)
-    if not DATA_PATH.joinpath(directory).exists():
-        DATA_PATH.joinpath(directory).mkdir()
+    if not CAMINHO_ABSOLUTO.joinpath(directory).exists():
+        CAMINHO_ABSOLUTO.joinpath(directory).mkdir()
 
     return date, directory
 
